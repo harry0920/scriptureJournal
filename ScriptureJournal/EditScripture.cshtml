@@ -1,0 +1,85 @@
+﻿@{
+    /**/
+
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Edit a Scripture";
+
+    var book = "";
+    var location = "";
+    var scripture = "";
+    var scriptureId = "";
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            scriptureId = Request.QueryString["ID"];
+            var db = Database.Open("ScriptureJournal");
+            var dbCommand = "SELECT * FROM scriptures WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, scriptureId);
+
+            if (row != null)
+            {
+                book = row.Book;
+                location = row.Location;
+                scripture = row.Scripture;
+            }
+            else
+            {
+                Validation.AddFormError("No Scripture was selected");
+            }
+        }
+        else
+        {
+            Validation.AddFormError("No Scripture was selected");
+        }
+    }
+
+    if (IsPost)
+    {
+        Validation.RequireField("book", "You must enter a Book Name");
+        Validation.RequireField("location", "Location is required");
+        Validation.RequireField("scripture", "You must enter a Scripture Content");
+        Validation.RequireField("scriptureId", "No Scripture Id was submitted!");
+
+        book = Request.Form["book"];
+        location = Request.Form["location"];
+        scripture = Request.Form["scripture"];
+        scriptureId = Request.Form["scriptureId"];
+
+        if (Validation.IsValid())
+        {
+            var db = Database.Open("ScriptureJournal");
+            var updateCommand = "UPDATE scriptures SET Book=@0 Location=@1 Scripture=@2 Date=@3 WHERE Id=@4";
+            db.Execute(updateCommand, book, location, scripture, DateTime.Now, scriptureId);
+            Response.Redirect("~/Scriptures");
+        }
+    }
+}
+    <h2>Edit a Scripture</h2>
+    @Html.ValidationSummary()
+    <form method="post">
+        <fieldset>
+            <legend>Scripture Information</legend>
+
+            <p>
+                <label for="book">Book:</label>
+                <input type="text" name="book" value="@book" />
+            </p>
+
+            <p>
+                <label for="location">Location:</label>
+                <input type="text" name="location" value="@location" />
+            </p>
+
+            <p>
+                <label for="scripture">Scripture:</label>
+                <textarea name="scripture" value="@scripture">@scripture</textarea> 
+            </p>
+
+            <input type="hidden" name="scriptureId" value="@scriptureId" />
+
+            <p><input type="submit" name="buttonSubmit" value="Submit Changes" /></p>
+        </fieldset>
+    </form>
+    <p><a href="~/Scriptures">Return to Scripture listing</a></p>

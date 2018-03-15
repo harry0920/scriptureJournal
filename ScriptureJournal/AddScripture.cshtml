@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.title = "Add a Scripture";
+
+
+    Validation.RequireField("book", "You must enter a Book Name");
+    Validation.RequireField("location", "Location is required");
+    Validation.RequireField("scripture", "You must enter a Scripture Content");
+
+    var book = "";
+    var location = "";
+    var scripture = "";
+
+    if (IsPost && Validation.IsValid())
+    {
+        book = Request.Form["book"];
+        location = Request.Form["location"];
+        scripture = Request.Form["scripture"];
+
+        var db = Database.Open("ScriptureJournal");
+        var insertCommand = "INSERT INTO scriptures (Book, Location, Scripture, Date) Values(@0, @1, @2, @3)";
+        db.Execute(insertCommand, book, location, scripture, DateTime.Now);
+        Response.Redirect("~/Scriptures");
+    }
+}
+
+    <h2>Add a Favorite Scripture</h2>
+    @Html.ValidationSummary()
+    <form method="post">
+        <fieldset>
+            <legend>Scripture Information</legend>
+            <p>
+                <label for="book">Book:</label>
+                <input type="text" name="book" value="@Request.Form["book"]" />
+                @Html.ValidationMessage("book")
+            </p>
+
+            <p>
+                <label for="location">Location:</label>
+                <input type="text" name="location" value="@Request.Form["location"]" />
+                @Html.ValidationMessage("location")
+            </p>
+
+            <p>
+                <label for="scripture">Scripture:</label>
+                <input type="text" name="scripture" value="@Request.Form["scripture"]" />
+                @Html.ValidationMessage("scripture")
+            </p>
+
+            <p><input type="submit" name="buttonSubmit" value="Add Scripture" /></p>
+        </fieldset>
+    </form>

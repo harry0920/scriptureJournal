@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+    Page.title = "List Scriptures";
+
+    var db = Database.Open("ScriptureJournal");
+    var selectedData = db.Query("SELECT * FROM Scriptures");
+
+    var currentDate = DateTime.Now;
+
+    if (!Request.QueryString["searchBook"].IsEmpty())
+    {
+        var searchTerm = Request.QueryString["searchBook"];
+        var selectCommand = "SELECT * FROM Scriptures WHERE Book = @0";
+        selectedData = db.Query(selectCommand, searchTerm);
+
+    }
+    if (!Request.QueryString["searchKeyWord"].IsEmpty())
+    {
+        var searchTerm = "%" + Request.QueryString["searchKeyWord"] + "%";
+        var selectCommand = "SELECT * FROM Scriptures WHERE Scripture LIKE @0";
+        selectedData = db.Query(selectCommand, searchTerm);
+    }
+
+    var grid = new WebGrid(source: selectedData, rowsPerPage: 5);
+}
+
+
+<h2>List Scriptures</h2>
+<form method="get">
+    <div>
+        <label for="searchBook">Book Category to look for:</label>
+        <input type="text" name="searchBook" value="" />
+        <input type="Submit" value="Search Book" />
+        <br />
+        <label for="searchKeyWord">Keyword to look for:</label>
+        <input type="text" name="searchKeyWord" value="" />
+        <input type="Submit" value="Search Keyword" />
+        <br />
+    </div>
+</form>
+<p>
+    <a href="~/AddScripture">Add a new Scripture</a>
+</p>
+
+<div>
+
+    @grid.GetHtml(
+                  tableStyle: "grid",
+                  headerStyle: "head",
+                  alternatingRowStyle: "alt",
+                  columns: grid.Columns(
+                      grid.Column(format: @<a href="~/EditScripture?id=@item.Id">Edit</a>),
+                          grid.Column("Date"),
+                          grid.Column("Book"),
+                          grid.Column("Location"),
+                          grid.Column("Scripture"),
+                          grid.Column(format: @<a href="~/DeleteScripture?id=@item.ID">Delete</a>)))
+
+</div>

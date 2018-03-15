@@ -1,0 +1,84 @@
+﻿@{
+    /**/
+    Layout = "~/_Layout.cshtml";
+    Page.Title = "Delete a Scripture";
+
+    var book = "";
+    var location = "";
+    var scripture = "";
+    var scriptureId = "";
+    var date = new DateTime();
+
+    if (!IsPost)
+    {
+        if (!Request.QueryString["ID"].IsEmpty() && Request.QueryString["ID"].IsInt())
+        {
+            scriptureId = Request.QueryString["ID"];
+            var db = Database.Open("ScriptureJournal");
+            var dbCommand = "SELECT * FROM scriptures WHERE ID = @0";
+            var row = db.QuerySingle(dbCommand, scriptureId);
+
+            if (row != null)
+            {
+                book = row.Book;
+                location = row.Location;
+                scripture = row.Scripture;
+                date = row.date;
+            }
+            else
+            {
+                Validation.AddFormError("No Scripture was selected");
+            }
+        }
+        else
+        {
+            Validation.AddFormError("No Scripture was selected");
+        }
+    }
+
+    if (IsPost && !Request["buttonDelete"].IsEmpty())
+    {
+        scriptureId = Request.Form["scriptureId"];
+
+        if (Validation.IsValid())
+        {
+            var db = Database.Open("ScriptureJournal");
+            var deleteCommand = "DELETE FROM scriptures WHERE ID = @0";
+            db.Execute(deleteCommand,scriptureId);
+            Response.Redirect("~/Scriptures");
+        }
+    }
+}
+
+    <h2>Delete a Scripture</h2>
+    @Html.ValidationSummary()
+    <p><a href="~/Scriptures">Return to Scripture listing</a></p>
+    <form method="post">
+        <fieldset>
+            <legend>Scripture Information</legend>
+
+
+            <p>
+                <span>Date:</span>
+                <span>@date</span>
+            </p>
+            <p>
+                <span>Book:</span>
+                <span>@book</span>
+            </p>
+
+            <p>
+                <span>Location:</span>
+                <span>@location</span>
+            </p>
+
+            <p>
+                <span>Scripture:</span>
+                <span>@scripture</span>
+            </p>
+
+            <input type="hidden" name="scriptureId" value="@scriptureId" />
+            <p><input type="submit" name="buttonDelete" value="Delete Scripture" /></p>
+        </fieldset>
+    </form>
+    <p><a href="~/Scriptures">Return to Scripture listing</a></p>
