@@ -97,6 +97,7 @@
     <Content Include="AddScripture.cshtml" />
     <Content Include="EditScripture.cshtml" />
     <Content Include="DeleteScripture.cshtml" />
+    <Content Include="Default.cshtml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
