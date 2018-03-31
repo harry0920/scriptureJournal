@@ -50,7 +50,7 @@
         if (Validation.IsValid())
         {
             var db = Database.Open("ScriptureJournal");
-            var updateCommand = "UPDATE scriptures SET Book=@0 Location=@1 Scripture=@2 Date=@3 WHERE Id=@4";
+            var updateCommand = "UPDATE scriptures SET book=@0, Location=@1, scripture=@2, Date=@3 WHERE Id=@4";
             db.Execute(updateCommand, book, location, scripture, DateTime.Now, scriptureId);
             Response.Redirect("~/Scriptures");
         }
