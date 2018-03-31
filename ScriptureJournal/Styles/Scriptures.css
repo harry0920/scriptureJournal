@@ -6,7 +6,7 @@
 
 body {
     height: 60%;
-    font-family: 'Trebuchet MS', 'Arial', 'Helvetica', 'sans-serif';
+    font-family: 'Trebuchet MS', 'Arial', 'Helvetica', 'sans-serif', 'Slabo 27px';
     font-size: 10pt;
     background-color: LightGray;
     line-height: 1.6em;
@@ -89,3 +89,4 @@ span.dataDisplay {
     font-weight: bold;
     margin: 12px;
 }
+ 

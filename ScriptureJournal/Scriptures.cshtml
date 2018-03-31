@@ -26,14 +26,14 @@
 
 
 <h2>List Scriptures</h2>
-<form method="get">
-    <div>
+<form method="get" >
+    <div class="form-group">
         <label for="searchBook">Book Category to look for:</label>
-        <input type="text" name="searchBook" value="" />
+        <input type="text" name="searchBook" value="" class="form-control"/>
         <input type="Submit" value="Search Book" />
         <br />
         <label for="searchKeyWord">Keyword to look for:</label>
-        <input type="text" name="searchKeyWord" value="" />
+        <input type="text" name="searchKeyWord" value="" class="form-control" />
         <input type="Submit" value="Search Keyword" />
         <br />
     </div>
@@ -43,7 +43,6 @@
 </p>
 
 <div>
-
     @grid.GetHtml(
                   tableStyle: "grid",
                   headerStyle: "head",
